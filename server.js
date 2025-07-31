@@ -8,13 +8,18 @@ const cookieParser = require('cookie-parser');
 const apiRoutes = require('./routes/api');
 
 const app = express();
-const port = process.env.PORT || 3000; // Use port provided by Render
+const port = process.env.PORT || 3000;
 const mongoUrl = process.env.MONGO_URL;
 const dbName = 'exampro';
 
 async function connectToDbAndStartServer() {
     try {
-        const client = new MongoClient(mongoUrl);
+        // CORRECTED: Added tlsAllowInvalidCertificates option for Render compatibility
+        const client = new MongoClient(mongoUrl, { 
+            tls: true, 
+            tlsAllowInvalidCertificates: true 
+        });
+        
         await client.connect();
         const db = client.db(dbName);
         console.log('Successfully connected to MongoDB database.');
@@ -26,7 +31,7 @@ async function connectToDbAndStartServer() {
         app.use(express.json({ limit: '10mb' }));
         app.use(express.urlencoded({ extended: true, limit: '10mb' }));
         
-        // Static files (CSS, JS, images)
+        // Static files
         app.use(express.static(path.join(__dirname)));
         app.use('/snapshots', express.static(path.join(__dirname, 'snapshots')));
         app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -34,7 +39,6 @@ async function connectToDbAndStartServer() {
         // --- API Routes ---
         app.use('/api', apiRoutes);
         
-        // --- ADD THIS: Route to serve the main index.html file ---
         app.get('/', (req, res) => {
             res.sendFile(path.join(__dirname, 'index.html'));
         });
