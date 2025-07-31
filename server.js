@@ -1,16 +1,15 @@
-require('dotenv').config(); // Load environment variables
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const { MongoClient } = require('mongodb');
+const cookieParser = require('cookie-parser');
 
-// Import the main API router
 const apiRoutes = require('./routes/api');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use port provided by Render
 const mongoUrl = process.env.MONGO_URL;
-// const mongoUrl = 'mongodb://localhost:27017';
 const dbName = 'exampro';
 
 async function connectToDbAndStartServer() {
@@ -23,27 +22,32 @@ async function connectToDbAndStartServer() {
         app.locals.db = db;
 
         // --- Middleware Setup ---
+        app.use(cookieParser());
         app.use(express.json({ limit: '10mb' }));
         app.use(express.urlencoded({ extended: true, limit: '10mb' }));
         
-        // Static files
-        app.use(express.static(__dirname));
+        // Static files (CSS, JS, images)
+        app.use(express.static(path.join(__dirname)));
         app.use('/snapshots', express.static(path.join(__dirname, 'snapshots')));
-        app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // <-- ADD THIS LINE
+        app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
         // --- API Routes ---
         app.use('/api', apiRoutes);
+        
+        // --- ADD THIS: Route to serve the main index.html file ---
+        app.get('/', (req, res) => {
+            res.sendFile(path.join(__dirname, 'index.html'));
+        });
 
-        // Ensure upload directories exist
+        // Ensure directories exist
         const snapshotsDir = path.join(__dirname, 'snapshots');
-        const avatarsDir = path.join(__dirname, 'uploads', 'avatars'); // <-- ADD THIS LINE
+        const avatarsDir = path.join(__dirname, 'uploads', 'avatars');
         if (!fs.existsSync(snapshotsDir)) fs.mkdirSync(snapshotsDir, { recursive: true });
-        if (!fs.existsSync(avatarsDir)) fs.mkdirSync(avatarsDir, { recursive: true }); // <-- ADD THIS LINE
-
+        if (!fs.existsSync(avatarsDir)) fs.mkdirSync(avatarsDir, { recursive: true });
 
         // --- Start Server ---
         app.listen(port, () => {
-            console.log(`Server is running at http://localhost:${port}`);
+            console.log(`Server is running on port ${port}`);
         });
 
     } catch (err) {

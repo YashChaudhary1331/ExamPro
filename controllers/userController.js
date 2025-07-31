@@ -3,20 +3,26 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const saltRounds = 10;
-const JWT_SECRET = process.env.JWT_SECRET; // Use variable from .env
+const JWT_SECRET = process.env.JWT_SECRET;
 
-// --- Multer Configuration for Avatar Uploads ---
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/avatars/');
+// --- Cloudinary Configuration ---
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// --- Multer Configuration for Cloudinary ---
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'exampro_avatars',
+        allowed_formats: ['jpeg', 'png', 'jpg'],
     },
-    filename: function (req, file, cb) {
-        // CORRECTED: Create a unique filename without using req.body.email
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
 });
 
 const upload = multer({ storage: storage });
@@ -28,7 +34,6 @@ exports.signup = async (req, res) => {
         const db = req.app.locals.db;
         const { fullName, email, password } = req.body;
         const role = email === 'admin@exam.pro' ? 'admin' : 'student';
-
         const usersCollection = db.collection('users');
         const existingUser = await usersCollection.findOne({ email: email });
         if (existingUser) {
@@ -51,7 +56,10 @@ exports.login = async (req, res) => {
         const usersCollection = db.collection('users');
         const user = await usersCollection.findOne({ email: email });
         if (user && await bcrypt.compare(password, user.password)) {
-            res.json({ status: 'success', message: 'Login successful!', role: user.role, fullName: user.fullName });
+            const tokenPayload = { email: user.email, fullName: user.fullName, role: user.role };
+            const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1d' });
+            res.cookie('token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+            res.json({ status: 'success', message: 'Login successful!', user: { fullName: user.fullName, role: user.role } });
         } else {
             res.status(401).json({ status: 'error', message: 'Invalid email or password.' });
         }
@@ -61,13 +69,19 @@ exports.login = async (req, res) => {
     }
 };
 
+exports.logout = (req, res) => {
+    res.clearCookie('token');
+    res.json({ status: 'success', message: 'Logged out successfully.' });
+};
+
+exports.checkAuth = async (req, res) => {
+    res.json({ status: 'success', user: req.user });
+};
+
 exports.getProfile = async (req, res) => {
     try {
         const db = req.app.locals.db;
-        const userEmail = req.query.email;
-        if (!userEmail) {
-            return res.status(400).json({ status: 'error', message: 'User email is required.' });
-        }
+        const userEmail = req.user.email;
         const usersCollection = db.collection('users');
         const userProfile = await usersCollection.findOne({ email: userEmail }, { projection: { password: 0, _id: 0 } });
         if (userProfile) {
@@ -76,15 +90,15 @@ exports.getProfile = async (req, res) => {
             res.status(404).json({ status: 'error', message: 'User not found.' });
         }
     } catch (error) {
-        console.error('Error fetching user profile:', error);
-        res.status(500).json({ status: 'error', message: 'Failed to fetch user profile.' });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
 exports.changePassword = async (req, res) => {
     try {
         const db = req.app.locals.db;
-        const { email, currentPassword, newPassword } = req.body;
+        const { currentPassword, newPassword } = req.body;
+        const email = req.user.email;
         const usersCollection = db.collection('users');
         const user = await usersCollection.findOne({ email: email });
         if (!user) {
@@ -106,10 +120,8 @@ exports.changePassword = async (req, res) => {
 exports.updateProfile = async (req, res) => {
     try {
         const db = req.app.locals.db;
-        const { email, fullName } = req.body;
-        if (!email || !fullName) {
-            return res.status(400).json({ status: 'error', message: 'Email and full name are required.' });
-        }
+        const { fullName } = req.body;
+        const email = req.user.email;
         const usersCollection = db.collection('users');
         const result = await usersCollection.updateOne({ email: email }, { $set: { fullName: fullName } });
         if (result.matchedCount === 0) {
@@ -125,10 +137,7 @@ exports.updateProfile = async (req, res) => {
 exports.getProfileStats = async (req, res) => {
     try {
         const db = req.app.locals.db;
-        const userEmail = req.query.email;
-        if (!userEmail) {
-            return res.status(400).json({ status: 'error', message: 'User email is required.' });
-        }
+        const userEmail = req.user.email;
         const submissionsCollection = db.collection('submissions');
         const stats = await submissionsCollection.aggregate([
             { $match: { studentEmail: userEmail } },
@@ -150,10 +159,8 @@ exports.getProfileStats = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
     try {
         const db = req.app.locals.db;
-        const { email, password } = req.body;
-        if (!email || !password) {
-            return res.status(400).json({ status: 'error', message: 'Email and password are required for deletion.' });
-        }
+        const { password } = req.body;
+        const email = req.user.email;
         const usersCollection = db.collection('users');
         const user = await usersCollection.findOne({ email: email });
         if (!user) {
@@ -179,8 +186,8 @@ exports.uploadAvatar = async (req, res) => {
             return res.status(400).json({ status: 'error', message: 'No file uploaded.' });
         }
         const db = req.app.locals.db;
-        const email = req.body.email;
-        const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+        const email = req.user.email;
+        const avatarUrl = req.file.path;
         const usersCollection = db.collection('users');
         await usersCollection.updateOne({ email: email }, { $set: { avatarUrl: avatarUrl } });
         res.json({ status: 'success', message: 'Avatar uploaded successfully!', avatarUrl: avatarUrl });
@@ -190,33 +197,23 @@ exports.uploadAvatar = async (req, res) => {
     }
 };
 
-// Export the upload middleware
-exports.uploadMiddleware = upload.single('avatar');
-// ... keep all existing functions ...
-
-// Add this new function at the end of the file
 exports.removeAvatar = async (req, res) => {
     try {
         const db = req.app.locals.db;
-        const { email } = req.body;
+        const email = req.user.email;
         const usersCollection = db.collection('users');
-
-        // 1. Find the user to get their current avatar URL
         const user = await usersCollection.findOne({ email: email });
         if (user && user.avatarUrl) {
-            // 2. Delete the physical file from the server
-            const filePath = path.join(__dirname, '..', user.avatarUrl); // Go up one directory from /controllers
-            fs.unlink(filePath, (err) => {
-                if (err) console.error("Error deleting avatar file:", err);
-            });
+            const publicIdWithFolder = user.avatarUrl.substring(user.avatarUrl.indexOf('exampro_avatars'));
+            const publicId = publicIdWithFolder.substring(0, publicIdWithFolder.lastIndexOf('.'));
+            cloudinary.uploader.destroy(publicId);
         }
-
-        // 3. Remove the avatarUrl field from the user's document in the database
         await usersCollection.updateOne({ email: email }, { $unset: { avatarUrl: "" } });
-
         res.json({ status: 'success', message: 'Avatar removed successfully.' });
     } catch (error) {
         console.error('Error removing avatar:', error);
         res.status(500).json({ status: 'error', message: 'Server error during avatar removal.' });
     }
 };
+
+exports.uploadMiddleware = upload.single('avatar');
