@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - ExamPro</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+
+<header class="dashboard-header">
+    <div class="header-left">
+        <div class="logo">
+            <h1>ExamPro</h1>
+        </div>
+        <nav class="main-nav">
+            <a href="student-dashboard.html">Dashboard</a>
+            <a href="my-results.html">My Results</a>
+            <a href="profile.html" class="active">Profile</a>
+        </nav>
+    </div>
+    <a href="index.html" class="logout-button">Logout</a>
+</header>   
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h2>My Profile</h2>
+            <p>View your account details and manage your password.</p>
+        </div>
+
+        <div class="profile-layout">
+            <div class="profile-left">
+                <div class="card profile-avatar-card">
+                    <img src="assets/img/default-avatar.png" alt="Profile Picture" id="profile-avatar-img">
+                    <form id="avatar-upload-form">
+                        <input type="file" id="avatar-input" name="avatar" accept="image/*" class="hidden-input">
+                        <label for="avatar-input" class="upload-button">Choose Picture</label>
+                        <button type="submit" class="login-button">Upload</button>
+                    </form>
+                    <button id="remove-avatar-btn" class="danger-button" style="width: 100%;">Remove Picture</button>
+                    <div id="notification-container-avatar" class="notification hidden"></div>
+                </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Account Details</h3>
+                <div id="notification-container-profile" class="notification hidden"></div>
+                <form id="profile-details-form">
+                    <div class="input-group">
+                        <label for="profile-fullname">Full Name</label>
+                        <input type="text" id="profile-fullname" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="profile-email">Email Address</label>
+                        <input type="email" id="profile-email" disabled>
+                    </div>
+                    <div class="profile-stats">
+                        <p><strong>Total Exams Taken:</strong> <span id="stats-exams-taken">--</span></p>
+                        <p><strong>Overall Average Score:</strong> <span id="stats-average-score">--%</span></p>
+                    </div>
+                    <button type="submit" class="login-button">Save Changes</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Change Password</h3>
+                <div id="notification-container-password" class="notification hidden"></div>
+                <form id="change-password-form">
+                    <div class="input-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" required>
+                    </div>
+                    <button type="submit" class="login-button">Update Password</button>
+                </form>
+            </div>
+        </div>
+        <div class="card danger-zone">
+            <h3>Danger Zone</h3>
+            <p>Permanently delete your account and all of your data. This action cannot be undone.</p>
+            <button id="delete-account-btn" class="danger-button">Delete My Account</button>
+        </div>
+    </main>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

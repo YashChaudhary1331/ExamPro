@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ExamPro</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-body">
+
+<header class="dashboard-header">
+    <div class="header-left">
+        <div class="logo">
+            <h1>ExamPro (Admin)</h1>
+        </div>
+        <nav class="main-nav">
+            <a href="admin-dashboard.html" class="active">Dashboard</a>
+            <a href="create-exam.html">Create Exam</a>
+            <a href="review-exam.html">Review Submissions</a>
+            <a href="all-data.html">All Data</a>
+        </nav>
+    </div>
+    <a href="index.html" class="logout-button">Logout</a>
+</header>   
+
+    <main class="dashboard-main">
+        <div class="welcome-banner admin-banner">
+            <h2>Administrator Dashboard</h2>
+            <p>Manage exams and monitor student progress with these analytics.</p>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Average Score Per Exam</h3>
+                <canvas id="averageScoresChart"></canvas>
+            </div>
+            <div class="card">
+                <h3>Overall Pass/Fail Rate</h3>
+                <canvas id="passFailChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="card upcoming-exams" style="margin-top: 30px;">
+            <h3>Manage Exams</h3>
+            <ul>
+                </ul>
+        </div>
+    </main>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 

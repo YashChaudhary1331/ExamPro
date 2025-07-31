@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Exam - ExamPro</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+
+<header class="dashboard-header">
+    <div class="header-left">
+        <div class="logo">
+            <h1>ExamPro (Admin)</h1>
+        </div>
+        <nav class="main-nav">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="create-exam.html" class="active">Create Exam</a>
+            <a href="review-exam.html">Review Submissions</a>
+            <a href="all-data.html">All Data</a>
+        </nav>
+    </div>
+    <a href="index.html" class="logout-button">Logout</a>
+</header>
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h2>Create a New Exam</h2>
+        </div>
+
+        <div class="form-container">
+            <div class="form-group">
+                <label for="exam-title">Exam Title</label>
+                <input type="text" id="exam-title" placeholder="e.g., Mathematics 101 Final">
+            </div>
+            <div class="form-group">
+                <label for="time-limit">Time Limit (in minutes)</label>
+                <input type="number" id="time-limit" placeholder="e.g., 60">
+            </div>
+
+            <hr class="form-divider">
+
+            <h3>Questions</h3>
+            <div id="questions-container"></div>
+
+            <button id="add-question-btn">Add Another Question</button>
+            <button id="save-exam-btn">Save Exam</button>
+        </div>
+    </main>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

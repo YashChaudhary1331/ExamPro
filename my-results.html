@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Results - ExamPro</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+
+<header class="dashboard-header">
+    <div class="header-left">
+        <div class="logo">
+            <h1>ExamPro</h1>
+        </div>
+        <nav class="main-nav">
+            <a href="student-dashboard.html">Dashboard</a>
+            <a href="my-results.html" class="active">My Results</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </div>
+    <a href="index.html" class="logout-button">Logout</a>
+</header>   
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h2>My Exam History</h2>
+            <p>Here is a list of all the exams you have completed.</p>
+        </div>
+
+        <div class="card data-section">
+            <div class="data-table-container">
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th>Exam Title</th>
+                            <th>Date Taken</th>
+                            <th>Score</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <p id="no-results-message" class="hidden-message">You have not completed any exams yet.</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

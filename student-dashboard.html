@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - ExamPro</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="dashboard-body">
+
+    <header class="dashboard-header">
+        <div class="header-left">
+            <div class="logo">
+                <h1>ExamPro</h1>
+            </div>
+            <nav class="main-nav">
+                <a href="student-dashboard.html" class="active">Dashboard</a>
+                <a href="my-results.html">My Results</a>
+                <a href="profile.html">Profile</a>
+            </nav>
+        </div>
+        <a href="index.html" class="logout-button">Logout</a>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="welcome-banner">
+            <h2 id="welcome-message">Welcome Back, Student!</h2>
+            <p>Here are your available exams. Good luck!</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card upcoming-exams">
+                <h3>Upcoming Exams</h3>
+                <ul>
+                </ul>
+            </div>
+
+            <div class="card recent-results">
+                <h3>Recent Results</h3>
+                <ul>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

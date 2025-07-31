@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Exam - ExamPro</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+
+<header class="dashboard-header">
+    <div class="header-left">
+        <div class="logo">
+            <h1>ExamPro (Admin)</h1>
+        </div>
+        <nav class="main-nav">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="create-exam.html">Create Exam</a>
+            <a href="review-exam.html" class="active">Review Submissions</a>
+            <a href="all-data.html">All Data</a> <!-- Added All Data link -->
+        </nav>
+    </div>
+    <a href="index.html" class="logout-button">Logout</a>
+</header>   
+
+    <main class="dashboard-main">
+        <div class="page-header">
+            <h2>Review Exam Submissions</h2>
+            <p>Viewing proctoring snapshots for the latest exam session.</p>
+        </div>
+
+        <div class="card">
+            <h3>Proctoring Snapshots</h3>
+            <div id="snapshot-gallery">
+                <!-- JavaScript will load snapshots here -->
+                <p>Loading snapshots...</p>
+            </div>
+        </div>
+    </main>
+
+      <script src="assets/js/main.js"></script>
+</body>
+</html>

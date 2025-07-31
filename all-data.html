@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Data - ExamPro (Admin)</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+
+    <header class="dashboard-header">
+        <div class="header-left">
+            <div class="logo">
+                <h1>ExamPro (Admin)</h1>
+            </div>
+            <nav class="main-nav">
+                <a href="admin-dashboard.html">Dashboard</a>
+                <a href="create-exam.html">Create Exam</a>
+                <a href="review-exam.html">Review Submissions</a>
+                <a href="all-data.html" class="active">All Data</a> </nav>
+        </div>
+        <a href="index.html" class="logout-button">Logout</a>
+    </header>   
+
+    <main class="dashboard-main all-data-main-content"> <div class="page-header">
+            <h2>All System Data</h2>
+            <p>View all registered users, created exams, and proctoring snapshots.</p>
+        </div>
+
+        <div class="card data-section">
+            <h3>Registered Users</h3>
+            <div class="data-table-container">
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <p id="no-users-message" class="hidden-message">No registered users found.</p>
+            </div>
+        </div>
+
+        <div class="card data-section">
+            <h3>Created Exams</h3>
+            <div class="data-table-container">
+                <table id="exams-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Time Limit (mins)</th>
+                            <th>Questions Count</th>
+                            <th>Created On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <p id="no-exams-message" class="hidden-message">No exams created yet.</p>
+            </div>
+        </div>
+
+        <div class="card data-section">
+            <h3>Proctoring Snapshots</h3>
+            <div class="data-table-container">
+                <table id="snapshots-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Timestamp</th>
+                            <th>Gaze Deviation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <p id="no-snapshots-message" class="hidden-message">No snapshots recorded yet.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
